@@ -13,7 +13,7 @@ const NavBar = () => {
 
   return (
     <nav className="navbar">
-      <h3 className="logo">QUery_Genius</h3>
+      <h3 className="logo">Query_Genius</h3>
       <ul className="nav-links">
         <li>
           <Link to={"/chat"}>Chat</Link>

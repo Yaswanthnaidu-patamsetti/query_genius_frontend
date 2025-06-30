@@ -1,14 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  FiUser,
-  FiMail,
-  FiPhone,
-  FiLock,
-  FiEye,
-  FiEyeOff,
-} from "react-icons/fi";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
 import "./Auth.css";
 import { UserRegistration } from "../../services/authService";
@@ -33,12 +26,8 @@ const Register = () => {
       const response = await UserRegistration(userData);
 
       if (response.data) {
-        console.log("response", response.message);
-        const message = response.message || "Registered Successfully";
         toast.success("Registered Successfully");
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
+        setTimeout(() => navigate("/login"), 2000);
       }
     } catch (error) {
       const message = error.message || "Registration failed";
@@ -52,7 +41,6 @@ const Register = () => {
         <h3>Register</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
           <div className="input-group">
-            <FiUser className="icon" />
             <input
               type="text"
               placeholder="Name"
@@ -62,7 +50,6 @@ const Register = () => {
           {errors.name && <p className="error">{errors.name.message}</p>}
 
           <div className="input-group">
-            <FiMail className="icon" />
             <input
               type="email"
               placeholder="Email"
@@ -72,7 +59,6 @@ const Register = () => {
           {errors.email && <p className="error">{errors.email.message}</p>}
 
           <div className="input-group">
-            <FiPhone className="icon" />
             <input
               type="text"
               placeholder="Phone Number"
@@ -82,7 +68,6 @@ const Register = () => {
           {errors.phone && <p className="error">{errors.phone.message}</p>}
 
           <div className="input-group password-group">
-            <FiLock className="icon" />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"

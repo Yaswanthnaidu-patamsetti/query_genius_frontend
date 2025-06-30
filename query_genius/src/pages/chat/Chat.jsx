@@ -2,13 +2,15 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaRobot } from "react-icons/fa";
 import { toast } from "react-toastify";
+import chatbotGif from "../../assets/chatbot.gif";
+import chatBotIcon from "../../assets/chatbot.png";
 import { AuthContext } from "../../context/AuthContext";
 import { askQuestion } from "../../services/chatService";
 import "./Chat.css";
 
 const availableTables = [
   { value: "", label: "Select Table (optional)" },
-  { value: "chocolates", label: "chocolates" },
+  { value: "chocolates", label: "Chocolates" },
   { value: "products", label: "Products" },
 ];
 
@@ -57,12 +59,11 @@ const Chat = () => {
       try {
         setIsTyping(true);
         const response = await askQuestion(
-          { question: input.toString().trim(), targetTableName: selectedTable },
+          { question: input.trim(), targetTableName: selectedTable },
           accessToken
         );
 
         let botMessage;
-
         switch (response.type) {
           case "restricted":
           case "noData":
@@ -76,7 +77,7 @@ const Chat = () => {
 
           case "data":
             botMessage = {
-              text: response.response, // This is the data array/object
+              text: response.response,
               sender: "bot",
               type: "data",
             };
@@ -110,13 +111,17 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
+      <div className="chat-header">Query Genius</div> {/* Add this */}
       <div className="messages">
         {messages.map((msg, idx) => (
           <div key={idx} className={`message-wrapper ${msg.sender}`}>
             <div className="avatar">
-              {msg.sender === "user" ? <FaUser /> : <FaRobot />}
+              {msg.sender === "user" ? (
+                <FaUser />
+              ) : (
+                <img src={chatbotGif} alt="Bot Avatar" className="bot-avatar" />
+              )}
             </div>
-
             <div className={`message ${msg.sender}`}>
               {msg.type === "data" &&
               Array.isArray(msg.text) &&
@@ -130,10 +135,10 @@ const Chat = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {msg.text.map((row, idx) => (
-                      <tr key={idx}>
-                        {Object.values(row).map((value, i) => (
-                          <td key={i}>{value?.toString()}</td>
+                    {msg.text.map((row, i) => (
+                      <tr key={i}>
+                        {Object.values(row).map((val, j) => (
+                          <td key={j}>{val?.toString()}</td>
                         ))}
                       </tr>
                     ))}
@@ -151,10 +156,11 @@ const Chat = () => {
             </div>
           </div>
         ))}
+
         {isTyping && (
           <div className="message-wrapper bot">
             <div className="avatar">
-              <FaRobot />
+              <img src={chatbotGif} alt="Bot Avatar" className="bot-avatar" />
             </div>
             <div className="message bot typing">
               <p>Typing...</p>
@@ -163,7 +169,6 @@ const Chat = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
-
       <div className="chat-input-area">
         <select
           value={selectedTable}
@@ -176,6 +181,7 @@ const Chat = () => {
             </option>
           ))}
         </select>
+
         <input
           type="text"
           placeholder="Type a message..."
@@ -184,6 +190,7 @@ const Chat = () => {
           onKeyDown={handleKeyPress}
           disabled={isTyping}
         />
+
         <button onClick={handleSend} disabled={isTyping}>
           Send
         </button>

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
+console.log("Base URL:", baseUrl);
 export const UserRegistration = async (userData) => {
   try {
     const response = await axios.post(`${baseUrl}/auth/signup`, userData);

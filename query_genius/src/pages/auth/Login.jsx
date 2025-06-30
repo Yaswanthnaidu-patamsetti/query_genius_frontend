@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import "./Auth.css";
 import { useContext, useState } from "react";
 import { UserLogin } from "../../services/authService";
@@ -25,15 +25,14 @@ const Login = () => {
         password: data.password.trim(),
       };
       const response = await UserLogin(loginPayload);
-      if (response.status == 200) {
+      if (response.status === 200) {
         const access_token = response.data.access_token;
         login(access_token);
         toast.success("Login Success");
         setTimeout(() => navigate("/home"), 3000);
       }
     } catch (error) {
-      const message = error.message || "Login failed";
-      toast.error(message);
+      toast.error(error.message || "Login failed");
     }
   };
 
@@ -43,7 +42,6 @@ const Login = () => {
         <h2>Login</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
           <div className="input-group">
-            <FiMail className="icon" />{" "}
             <input
               type="text"
               placeholder="Email or Phone"
@@ -53,7 +51,6 @@ const Login = () => {
           {errors.input && <p className="error">{errors.input.message}</p>}
 
           <div className="input-group password-group">
-            <FiLock className="icon" />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"

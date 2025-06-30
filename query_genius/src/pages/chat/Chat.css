@@ -1,26 +1,129 @@
-/* Container */
-.chat-container {
-  flex: 1;
-  padding: 1.5rem;
-  background-color: #f1f5f9;
-  width: 100%;
+/* Base Reset */
+html,
+body {
+  margin: 0;
+  padding: 0;
   height: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
 }
 
-/* Messages */
+/* Main container */
+.chat-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background-image: url("../../assets/bg.jpg"); /* Adjust if needed */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.bot-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Scrollable chat area */
 .messages {
   flex-grow: 1;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding: 1rem;
+  padding-bottom: 120px; /* Reserve space for fixed input area */
+  padding-top: 80px; /* ✅ Add this to push messages below the header */
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+  scroll-behavior: smooth;
 }
 
-/* Message wrapper */
+/* Custom scrollbar */
+.messages::-webkit-scrollbar {
+  width: 8px;
+}
+.messages::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+.messages::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Fixed input area at bottom */
+.chat-input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-top: 1px solid #cbd5e1;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+/* Dropdown */
+.table-select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #f9fafb;
+  color: #1e293b;
+  font-size: 1rem;
+  min-width: 160px;
+  flex-shrink: 0;
+}
+
+/* Text input */
+input[type="text"] {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  color: #1e293b;
+  background-color: #f9fafb;
+}
+
+input[type="text"]:focus,
+.table-select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 5px #4f46e5aa;
+}
+
+/* Send button */
+button {
+  padding: 0 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #4f46e5;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+button:disabled {
+  background-color: #a5b4fc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #3730a3;
+}
+
+/* Chat message layout */
 .message-wrapper {
   display: flex;
   align-items: flex-end;
@@ -34,7 +137,7 @@
   flex-direction: row;
 }
 
-/* Avatar */
+/* Avatar bubble */
 .avatar {
   width: 36px;
   height: 36px;
@@ -49,133 +152,88 @@
   flex-shrink: 0;
 }
 
-/* Message bubble */
+/* Message card */
 .message {
-  max-width: 60%;
+  max-width: 75%;
   padding: 0.75rem 1rem;
-  border-radius: 16px;
+  border-radius: 14px;
   font-size: 1rem;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
   word-break: break-word;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #1e293b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  white-space: pre-wrap;
 }
 
 .message.user {
-  background-color: #4f46e5; /* Indigo 600 */
+  background-color: rgba(79, 70, 229, 0.95);
   color: white;
-  text-align: right;
   border-bottom-right-radius: 0;
 }
 
 .message.bot {
-  background-color: #e2e8f0;
-  color: #1e293b;
   border-bottom-left-radius: 0;
 }
 
-/* Typing Indicator */
+/* Typing */
 .message.typing {
   font-style: italic;
   opacity: 0.8;
 }
 
-/* Table inside messages */
+/* Code or JSON display */
+.message pre,
+.message code {
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+/* Table responses */
 .response-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
-  margin-top: 0;
+  margin-top: 0.5rem;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .response-table th,
 .response-table td {
   border: 1px solid #cbd5e1;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem;
   text-align: left;
   color: #1e293b;
 }
 
 .response-table th {
-  background-color: #e2e8f0;
+  background-color: #f1f5f9;
   font-weight: 600;
 }
 
-/* Chat input area */
-.chat-input-area {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #cbd5e1;
-  background-color: #fff;
-  border-radius: 12px;
-}
-
-.table-select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  background-color: #f9fafb;
-  color: #1e293b;
-  font-size: 1rem;
-  min-width: 180px;
-  transition: border-color 0.3s ease;
-}
-
-.table-select:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 5px #4f46e5aa;
-}
-
-input[type="text"] {
-  flex-grow: 1;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 5px #4f46e5aa;
-}
-
-button {
-  padding: 0 1.5rem;
-  border-radius: 8px;
-  border: none;
-  background-color: #4f46e5;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:disabled {
-  background-color: #a5b4fc;
-  cursor: not-allowed;
-}
-
-button:hover:not(:disabled) {
-  background-color: #3730a3;
-}
-
-/* Responsive adjustments */
+/* Responsive layout */
 @media (max-width: 768px) {
   .message {
     max-width: 85%;
   }
 
-  .chat-container {
-    padding: 1rem;
+  .chat-input-area {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .table-select {
-    min-width: 140px;
+  .table-select,
+  input[type="text"],
+  button {
+    width: 100%;
+  }
+
+  button {
+    margin-top: 0.5rem;
   }
 }
